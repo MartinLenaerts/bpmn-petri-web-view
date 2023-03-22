@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import {useRef, useState} from "react";
 import Diagram from "@/pages/diagram";
 import styles from '@/styles/index.module.css'
