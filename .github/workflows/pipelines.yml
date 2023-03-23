@@ -20,5 +20,6 @@ jobs:
             git clone git@github.com:MartinLenaerts/bpmn-petri-web-view.git web-view
             cd web-view
             git checkout main
+            npm install
             npm run dev
             npm run start
