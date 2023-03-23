@@ -5,7 +5,8 @@ import {Box, Button, Heading, IconButton} from "@chakra-ui/react";
 import {ArrowBackIcon, DownloadIcon} from '@chakra-ui/icons'
 
 export default function Home() {
-    const [diagram, setDiagram] = useState({bpmn: null});
+    const initialState = {bpmn: null, petri_txt: null, petri_img: null}
+    const [diagram, setDiagram] = useState(initialState);
 
     const hiddenFileInput = useRef(null)
 
@@ -21,18 +22,24 @@ export default function Home() {
                 body: i
             })
 
-            if (response.ok) {
-                const result = await response.json()
-                const reader = new FileReader()
-                reader.readAsText(i, "UTF-8");
-                reader.onload = function (evt) {
-                    setDiagram({
-                        bpmn: evt.target.result,
-                        petri_img: result.img,
-                        petri_txt: result.txt
-                    })
+
+            const result = await response.json()
+            const reader = new FileReader()
+            reader.readAsText(i, "UTF-8");
+            reader.onload = function (evt) {
+
+                const diagramResult = {
+                    bpmn: evt.target.result,
+                    petri_img: null,
+                    petri_txt: null
                 }
 
+                if (response.status === 200) {
+                    diagramResult.petri_img = result.img
+                    diagramResult.petri_txt = result.txt
+                }
+
+                setDiagram(diagramResult)
             }
         }
     }
@@ -42,13 +49,13 @@ export default function Home() {
     }
 
     const goBack = () => {
-        setDiagram({bpmn: null})
+        setDiagram(initialState)
     }
 
     return (
         <>
             <Box m={"1rem"}>
-                {!!diagram.bpmn ?
+                {diagram.bpmn ?
                     <>
                         <Box><Button leftIcon={<ArrowBackIcon/>} onClick={goBack}>Back</Button></Box>
                         <Diagram diagram={diagram.bpmn} petri_img={diagram.petri_img} petri_txt={diagram.petri_txt}/>
@@ -57,7 +64,7 @@ export default function Home() {
                     <>
                         <Box className={styles.container}>
                             <Heading>Select a BPMN file</Heading>
-                            <IconButton onClick={handleClick} icon={<DownloadIcon/>}/>
+                            <IconButton onClick={handleClick} icon={<DownloadIcon/>} aria-label={"Upload"}/>
                             <input type={"file"} accept={".bpmn, .xml"} style={{display: 'none'}} ref={hiddenFileInput}
                                    onChange={handleUpload}/>
                         </Box>
