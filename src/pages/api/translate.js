@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
         await writeFile(filename, req.body);
 
-        await exec(`cd ${process.env.PYTHON_PROJECT_PATH} && ./venv/bin/python main.py -f ${filename} -k`);
+        await exec(`cd ${process.env.PYTHON_PROJECT_PATH} && python3 main.py -f ${filename} -k`);
 
 
         const txt = await readFile(`${dirname}/${now}.txt`, {encoding: 'utf8'})
