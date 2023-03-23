@@ -1,0 +1,24 @@
+name: Pipelines
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deployment:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: execute
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            rm -rf web-view
+            git clone git@github.com:MartinLenaerts/bpmn-petri-web-view.git web-view
+            cd web-view
+            git checkout main
+            npm run dev
+            npm run start
