@@ -21,5 +21,5 @@ jobs:
             cd web-view
             git checkout main
             npm install
-            npm run dev
+            npm run build
             npx next start -p 80
