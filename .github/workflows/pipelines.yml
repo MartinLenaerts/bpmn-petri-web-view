@@ -22,4 +22,4 @@ jobs:
             git checkout main
             npm install
             npm run build
-            npx next start -p 80
+            npx next start -p 80 &
